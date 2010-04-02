@@ -1,0 +1,168 @@
+\documentclass[12pt]{article}
+\usepackage{epsfig,amsmath,float}
+
+%\leftmargin{0cm}
+\setlength{\textheight}{8.5in}
+%\def\home{/home/stroud}
+\def\sty{\home/latex}
+\def\bib{\home/bbl}
+\def\picdir{/home/stroud/nonlin/pics}
+\setlength{\textheight}{8.5in}
+\setlength{\topmargin}{-0.5in}
+\setlength{\oddsidemargin}{-.25truein}
+\setlength{\evensidemargin}{0truein}
+\setlength{\parindent}{0in}
+\setlength{\parskip}{.3cm}
+\renewcommand{\baselinestretch}{1.10}
+\setlength{\textwidth}{6.93truein}
+\leftskip 0truein
+
+%%%%%% boldface characters %%%%%% 
+\def\y{\mathbf{y}}
+\newcommand{\be}{\mbox{\boldmath $\beta$}}
+\newcommand{\Si}{\mbox{\boldmath $\Sigma$}}
+\newcommand{\si}{\mbox{\boldmath $\sigma$}}
+\newcommand{\bth}{\mbox{\boldmath $\theta$}}
+
+
+
+\begin{document}
+
+\begin{center}
+{\large {\underline {\bf Eric Groo, Stat 289 Homework 3}}}
+\end{center}
+
+\vspace{.2cm}
+
+\vspace{.2cm}
+\noindent For Questions 1-7 we're considering an observed effect $y_i$, measured for each program $i$, as well as a standard error $\sigma_i$ of the treatment effect.  We want to analyze these treatments under a hierarchical model where
+\begin{eqnarray*}
+      y_i & \sim & \mbox{Normal}(\theta_i,\sigma^2_i)\\
+ \theta_i & \sim & \mbox{Normal}(\mu,\tau^2)
+\end{eqnarray*}
+We will assume that $\si^2=(\sigma^2_1,\ldots,\sigma^2_n)$ are all known without error. 
+We are interested in posterior inference for each $\theta_i$, which is the underlying true 
+treatment effect for program $i$, as well as the common treatment mean $\mu$ and variance 
+$\tau^2$.
+
+\begin{enumerate}{\leftmargin=1em}
+\item Verify that using a flat prior of $p(\mu,\tau)\propto 1$ corresponds to a prior for
+$(\mu,\tau^2)$ of $p(\mu,\tau^2) \propto \tau^{-1}$.  With this prior, write out the 
+full posterior distribution of the unknown parameters $\mu$, $\tau^2$ and 
+$\bth=(\theta_1,\ldots,\theta_n)$.
+
+\item The first approach is based on the realization that we can actually integrate out 
+each $\theta_i$ from the above distribution, giving us the marginal distribution of our 
+treatment effects $y_i$:
+$$
+y_i \sim \mbox{Normal}(\mu,\sigma^2_i+\tau^2)
+$$
+Write out the marginal posterior distribution of $p(\mu,\tau^2|\y,\si^2)$, and evaluate this posterior
+distribution over a grid of values of $\mu$ and and $\tau^2$. Use a grid of (0,10) for $\tau^2$.
+
+\item Use the grid sampling method to get 1000 samples from $p(\mu,\tau^2|\y,\si^2)$. 
+Calculate the mean, median and 95\% posterior interval for $\mu$ and $\tau^2$.
+
+\item Write out the distribution $p(\theta_i|\mu,\tau^2,\y,\si^2)$. Use the 1000 samples 
+of $\mu$ and $\tau^2$ to draw 1000 samples of each $\theta_i$. Calculate the mean of each $\theta_i$ and 
+compare to the observed treatment effects $y_i$.
+
+\item For Questions 5-7, consider $\tau^2$ to be fixed and equal to $\tau^2 = \mbox{median}(\tau^2)$ 
+that you calculated in Question 3. We now use a Gibbs sampler to draw samples from the posterior
+distribution $p(\mu,\bth|\y,\si^2)$. Remember that $\tau^2$ is now a known quantity in this question, 
+so we do not need to calculate the posterior distribution for it. Give the conditional distributions
+of the remaining unknown parameters given the other parameters.
+
+\item Use a Gibbs sampler based on the conditional distributions from the previous question
+to obtain 1000 samples from $p(\mu,\bth|\y,\si^2)$. Make sure that you only use samples after
+convergence and that your 1000 samples have low autocorrelation. Calculate the mean
+and posterior interval for each $\theta_i$.
+
+\item Use your samples of $\bth$ to calculate an estimate of the posterior probability that school
+A offers the best program.
+
+\vspace{.05cm}
+Questions 8-11 are based on the bicycle data in Table 2 below. We will focus only on the 
+first two rows of the table (the residential streets with bike routes).  We want to model 
+the total amount of traffic $y_i$ on each street (eg. $y_1=74$) as follows:
+%
+\begin{eqnarray*}
+        y_i & \sim & \mbox{Poisson}(\theta_i)\\
+   \theta_i & \sim & \mbox{Gamma}(\alpha,\beta)
+\end{eqnarray*}
+
+\item Write out the posterior distribution of our unknown variables $p(\alpha,\beta,\bth|\y)$ using a flat prior distribution for $\alpha$ and $\beta$, $p(\alpha,\beta) \propto 1$.
+
+\item We want to use a Gibbs sampler to get samples from $p(\alpha,\beta,\bth|\y)$. What is the conditional distribution of $\theta_i$ given all the other parameters?
+
+\item The conditional distributions $p(\alpha,\beta|\y)$ and $p(\beta|\alpha,\y)$ are not 
+easy to sample from, so you instead need to use a Metropolis (or Metropolis-Hastings) step 
+to obtain samples from $p(\alpha,\beta|\bth,\y)$. Choose a proposal distribution for 
+$\alpha$ and a proposal distribution for $\beta$.
+
+\item Combine the algorithm from Question 10 with the conditional distribution from 
+Question 9 to form a Gibbs sampler, which iterates between sampling:
+
+1. sampling $\theta_i | \alpha,\beta,\y$ for each $i$.\\
+2. sampling $\alpha,\beta|\bth,\y$.
+
+Use this algorithm to obtain 1000 samples from $p(\alpha,\beta,\bth|\y)$. Make sure that 
+you only use samples after convergence and that your 1000 samples have low autocorrelation.
+Calculate means and 95\% posterior intervals for $\alpha$ and $\beta$.
+
+\item Give a 95\% predictive interval for the total traffic on a new residential street 
+with a bike lane. 
+\end{enumerate}
+\newpage
+
+
+\begin{table}
+\centering
+\begin{tabular}{ccc}
+       & Estimated      & Standard error       \\
+       & treatment      & of effect            \\
+School & effect, $y_j$  & estimate, $\sigma_j$ \\
+\hline
+A & 28 & 15 \\
+B &  8 & 10 \\
+C & -3 & 16 \\
+D &  7 & 11 \\
+E & -1 &  9 \\
+F &  1 & 11 \\  
+G & 18 & 10 \\
+H & 12 & 18 
+\end{tabular}
+\caption{{\em Observed effects of special preparation on SAT-V scores in eight 
+randomized experiments.  Estimates are based on separate analyses for the eight 
+experiments.  From Rubin (1981).}}
+\end{table}
+
+
+\begin{table}
+\centering
+\begin{tabular}{lll}
+Type of   & Bike &  Counts of bicycles/other vehicles \\
+street     & route?   &     \\
+\hline
+Residential & yes & 16/58, 9/90, 10/48, 13/57, 19/103,           \\
+            &     & 20/57, 18/86, 17/112, 35/273, 55/64          \\
+Residential & no  & 12/113, 1/18, 2/14, 4/44, 9/208,             \\
+            &     & 7/67, 9/29, 8/154                            \\
+Fairly busy & yes & 8/29, 35/415, 31/425, 19/42, 38/180,         \\
+            &     & 47/675, 44/620, 44/437, 29/47, 18/462        \\
+Fairly busy & no  & 10/557, 43/1258, 5/499, 14/601, 58/1163,     \\
+            &     & 15/700, 0/90, 47/1093, 51/1459, 32/1086      \\
+Busy        & yes & 60/1545, 51/1499, 58/1598, 59/503, 53/407,   \\
+            &     & 68/1494, 68/1558, 60/1706, 71/476, 63/752    \\
+Busy        & no  & 8/1248, 9/1246, 6/1596, 9/1765, 19/1290,     \\
+            &     & 61/2498, 31/2346, 75/3101, 14/1918, 25/2318
+\end{tabular}
+\caption{{\em Counts of bicycles and other vehicles in one hour in each of 10 city blocks
+in each of six categories.  (The data for two of the residential blocks were lost.)
+For example, the first block had 16 bicycles and 58 other vehicles, the second had
+9 bicycles and 90 other vehicles, and so on.  Streets were classified as 'residential,'
+ 'fairly busy,' or 'busy' before the data were gathered.}}
+\end{table}
+
+\end{document}
+

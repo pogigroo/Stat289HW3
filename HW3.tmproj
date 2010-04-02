@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>currentDocument</key>
+	<string>Documents/School/Bayesian Methods/HW3/bike.dat</string>
+	<key>documents</key>
+	<array>
+		<dict>
+			<key>filename</key>
+			<string>HW3.tex</string>
+			<key>lastUsed</key>
+			<date>2010-04-02T02:44:18Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>SAT.dat</string>
+			<key>lastUsed</key>
+			<date>2010-04-02T02:42:13Z</date>
+		</dict>
+		<dict>
+			<key>filename</key>
+			<string>bike.dat</string>
+			<key>lastUsed</key>
+			<date>2010-04-02T02:44:18Z</date>
+			<key>selected</key>
+			<true/>
+		</dict>
+	</array>
+	<key>fileHierarchyDrawerWidth</key>
+	<integer>200</integer>
+	<key>metaData</key>
+	<dict>
+		<key>Documents/School/Bayesian Methods/HW3/HW3.tex</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>137</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>12</integer>
+				<key>line</key>
+				<integer>144</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>0</integer>
+				<key>line</key>
+				<integer>137</integer>
+			</dict>
+		</dict>
+		<key>Documents/School/Bayesian Methods/HW3/SAT.dat</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>25</integer>
+				<key>line</key>
+				<integer>0</integer>
+			</dict>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+		</dict>
+		<key>Documents/School/Bayesian Methods/HW3/bike.dat</key>
+		<dict>
+			<key>caret</key>
+			<dict>
+				<key>column</key>
+				<integer>5</integer>
+				<key>line</key>
+				<integer>17</integer>
+			</dict>
+			<key>columnSelection</key>
+			<false/>
+			<key>firstVisibleColumn</key>
+			<integer>0</integer>
+			<key>firstVisibleLine</key>
+			<integer>0</integer>
+			<key>selectFrom</key>
+			<dict>
+				<key>column</key>
+				<integer>4</integer>
+				<key>line</key>
+				<integer>17</integer>
+			</dict>
+			<key>selectTo</key>
+			<dict>
+				<key>column</key>
+				<integer>5</integer>
+				<key>line</key>
+				<integer>17</integer>
+			</dict>
+		</dict>
+	</dict>
+	<key>openDocuments</key>
+	<array>
+		<string>Documents/School/Bayesian Methods/HW3/HW3.tex</string>
+		<string>Documents/School/Bayesian Methods/HW3/bike.dat</string>
+		<string>Documents/School/Bayesian Methods/HW3/SAT.dat</string>
+	</array>
+	<key>showFileHierarchyDrawer</key>
+	<true/>
+	<key>windowFrame</key>
+	<string>{{251, -103}, {629, 726}}</string>
+</dict>
+</plist>
