@@ -47,20 +47,27 @@ We will assume that $\si^2=(\sigma^2_1,\ldots,\sigma^2_n)$ are all known without
 	\begin{enumerate}
 		\item A simple transformation of $u=\tau^2$ verifies that $p(\mu,\tau)\propto 1$ corresponds to a prior for $(\mu,\tau^2)$ of $p(\mu,\tau^2) \propto \tau^{-1}$. 
 		\begin{align*}
-			u = \tau^2 &\Rightarrow \tau=\sqrt(u) & \mathrm{note: } \ 0<\tau<\infty \\
+			u = \tau^2 &\Rightarrow \tau=\sqrt{u} & \mathrm{note: } \ 0<\tau<\infty \\
 			&\Rightarrow \dfrac{d\tau}{d u} = |\dfrac{1}{2 \sqrt{u}}| \\
 			&\Rightarrow p_u (u) = p_\tau (\tau(u)) * |\dfrac{1}{2 \sqrt{u}}| \ 
 		\end{align*}
 		This implies for $(\mu,\tau^2)$ 
 		\begin{align*}
-			p_u (u) & = p_{\tau^2} (\tau^2(u)) * |\dfrac{1}{2 \sqrt{\tau^2}}| \\
+			p_u (\tau^2) & = 1 * |\dfrac{1}{2 \sqrt{\tau^2}}| \\
 			& = |\dfrac{1}{2 \tau } | \\
 			& \propto \frac{1}{\tau} 
 		\end{align*}
-		\item Assuming that the specified prior is $p(\mu,\tau^2) \propto \tau^{-1}$, the corresponding posterior 
+		
+		\item Assuming that the specified prior is $p(\mu,\tau^2) \propto \tau^{-1}$, the corresponding posterior is
+		\[
+			\pi(\bth, \mu, \tau^2 | \mathbf{y}, \si^2) \propto \prod_{i=1}^8  \frac{1}{\sqrt{2\pi} \sigma_{i}} \exp \left( \frac{(y_i - \theta_i)^2}{2\sigma_{i}^2} \right) 
+			* \frac{1}{\sqrt{2\pi} \tau} \exp\left(\frac{(\theta_i - \mu)^2}{2\tau^2} \right) * \frac{1}{\tau} 
+		\]
 	\end{enumerate}
 	
 	\item The first approach is based on the realization that we can actually integrate out each $\theta_i$ from the above distribution, giving us the marginal distribution of our treatment effects $y_i$: $$ y_i \sim \mbox{Normal}(\mu,\sigma^2_i+\tau^2) $$ Write out the marginal posterior distribution of $p(\mu,\tau^2|\y,\si^2)$, and evaluate this posterior distribution over a grid of values of $\mu$ and and $\tau^2$. Use a grid of (0,10) for $\tau^2$.
+	
+	The solution to this question can be found on pg. 135-136 of the book
 	
 	\item Use the grid sampling method to get 1000 samples from $p(\mu,\tau^2|\y,\si^2)$. Calculate the mean, median and 95\% posterior interval for $\mu$ and $\tau^2$.
 	
