@@ -1,0 +1,530 @@
+#######################################
+#R-Code for First Problem
+#Chapter-3,Question-12,Page-99
+#######################################
+#Part-(b)
+#######################################
+meanX <- 30 
+meanY <- 0  
+varX  <- 5  
+varY  <- 1  
+rho   <- -0.4 # CORRELATION
+covXY <- rho * sqrt(varX) * sqrt(varY)
+mu <- c(meanX, meanY)
+sigma <- matrix(c(varX, covXY, covXY, varY), 2, 2)
+xgrid <- seq(20, 40, length = 100)
+ygrid <- seq(-2, 2,  length = 100)
+z <- matrix(NA, nrow = length(xgrid), ncol = length(ygrid))
+for (i in 1:100) {
+for (j in 1:100) {
+    z[i,j] <- (1/(2*pi*det(sigma)))*exp( -1*((xgrid[i]-meanX)^2+(ygrid[j]-meanY)^2-2*rho*(xgrid[i]-meanX)*(ygrid[j]- meanY)) /(2*(1-rho^2)) )
+  		 }
+		 }
+contour(x = xgrid, y = ygrid, z = z, main = "Contour plot of informative 
+		Prior-Bivariate Normal", col="blue")
+#######################################
+#Part-(e)
+#######################################
+yi<-c(24,25,31,31,22,21,26,20,16,22)
+ti<-c(1,2,3,4,5,6,7,8,9,10)# same forcast will be found if we use complete years.
+c<-lm(yi~ti)
+summary(c)
+#######################################
+#Part-(f).
+#######################################
+# function to estimate the Unnormalized density
+fn <- function(a, b) 
+     {
+     n1 <- exp(-a - b*ti)
+     n2<- (a + b*ti)^yi
+     n3<- factorial(yi)
+     out <- n1*n2/n3
+     prod(out)
+     }
+# original data
+ti <- c(1,2,3,4,5,6,7,8,9,10)
+yi <- c(24,25,31,31,22,21,26,20,16,22)
+# contour plot on a grid of 1000*1000
+l <- 1000   
+a <- seq(18, 42, length = l)
+b <-  seq(-3, .5, length = l)
+# evaluation of fn on a grid of 1,000,000 values
+d <- matrix(NA, nrow = l, ncol = l)
+for(i in 1:l){
+for(j in 1:l){ d[i,j] <- fn(a[i], b[j])
+	     } 
+             }
+# the plot
+contour(a, b, d, main="Contour plot of Posterior Density 
+		of alpha and beta",xlab = expression(alpha), ylab = expression(beta), col="red",
+                xlim = c(18, 42), ylim = c(-3, .5), las = 1)     
+#######################################
+#Normalized density(nd).Finding the constant c and then multiplying it by z gives us #normalized z.
+#we have to draw 1000 samples from marginal density of alpha
+#we have to draw 1000 samples from following nd.
+#######################################
+c1<-constant<-1/sum(d)
+nd<-c1*d #normalized density for both alpha and beta.
+dim(nd)
+sum(nd)# total probability is one and hence nd is a normalized density
+# marginal posterior densisty of alpha. We have to draw alpha from this density
+post.alphaden<-rowSums(nd)
+post.beta.cond<-matrix(NA,l,l)
+for(i in 1:l) post.beta.cond[i,]<-nd[i,]/post.alphaden[i]
+alpha.sample<-rep(NA,l)
+beta.sample<-rep(NA,l)
+for(m in 1:l){
+	one<-sample(1:l,size=1,prob=post.alphaden)
+	two<-sample(1:l,size=1,prob=post.beta.cond[one,])
+	alpha.sample[m]<-a[one]
+	beta.sample[m]<-b[two]
+	      }
+#######################################
+#Part-(g)
+#######################################
+prediction<-alpha.sample+beta.sample*11
+pred.accident<-rpois(1000,prediction)
+hist(pred.accident,main="Histogram of predictive
+accidents in 1986", col="pink")
+#######################################
+#Part-(h)
+#######################################
+m<-mean(pred.accident)
+v<-var(pred.accident)
+LPI<-m-1.96*sqrt(v)
+UPI<-m+1.96*sqrt(v)
+
+#######################################
+#R code for Second Problem
+#chapter-14,Question-1,Page-385
+#######################################
+# loading library for multivariate normal sampling function.
+library(MASS)
+
+# Creatng data set:
+y1 <- c(5, 13, 7.2, 6.8, 12.8, 5.8, 9.5, 6, 3.8, 14.3, 1.8, 6.9, 4.7, 9.5)
+y2 <- c(0.9, 12.9, 2.6, 3.5, 26.6, 1.5, 13, 8.8, 19.5, 2.5, 9, 13.1, 3.6, 6.9)
+y3 <- c(14.3, 6.9, 7.6, 9.8, 2.6, 43.5, 4.9, 3.5, 4.8, 5.6, 3.5, 3.9, 6.7)
+y  <- c(y1,y2,y3)
+
+# Creating indicator variables for three counties:
+c1 <- rep(c(1,0),c(14,27))
+c2 <- rep(c(0,1,0),c(14,14,13))
+c3 <- rep(c(0,0,1),c(14,14,13))
+
+# Creating indicator variables for basements:
+basementc1 <- c(1,1,1,1,1,0,1,1,1,0,1,1,1,1)
+basementc2 <- c(0,1,1,0,1,1,1,1,1,0,1,1,1,0)
+basementc3 <- c(1,0,1,0,1,1,1,1,1,1,1,1,1)
+
+# Creating independent variable in one matrix:
+x <- cbind(c(basementc1,basementc2,basementc3),c1,c2,c3)
+
+# Giving Column names to the above data matrix:
+colnames(x)<-c("B","C1","C2","C3")
+#######################################
+#Part-a
+#######################################
+# Fitting a linear regression model:
+lr <- lsfit(x,log(y),intercept=F)
+lsd<- ls.diag(lr)
+#Posterior inferences in nontechnical terms and simulation:
+nsimul<-10000
+n<-nrow(x)
+k<-ncol(x)
+sigma<-rep(NA,nsimul)
+beta<-array(NA,c(nsimul,k))
+for(i in 1:nsimul)
+	{
+	sigma[i]<-lsd$std.dev*sqrt((n-k)/rchisq(1,n-k))
+	beta[i,]<-lr$coef+(sigma[i]/lsd$std.dev)*lsd$std.err*t(chol(lsd$corr))%*%rnorm(k)
+	}
+output<-exp(cbind(beta[,2],beta[,1]+beta[,2],beta[,3],beta[1,]+beta[3,],
+		beta[,4],beta[1,]+beta[4,],beta[1,],sigma))
+for(i in 1:ncol(output))
+print(round(quantile(output[,i],c(.25,.50,.75)),1))		
+
+
+########################################
+#    Part-b
+########################################
+one <- c(0,1,0,0)
+one <- t(one)
+y1samp <- rep(NA,10000)
+for (i in 1:10000){
+newone <- one%*%t(t(beta[i,]))
+y1samp[i] <- rnorm(1,mean=newone,sd=sqrt(sigma[i]))
+		   }
+#Sampled houses with basement from blue earth county.
+two <- c(1,1,0,0) 
+two <- t(two)
+y2samp<- rep(NA,10000)
+for (i in 1:10000){
+newtwo <- two%*%t(t(beta[i,]))
+y2samp[i] <- rnorm(1,mean=newtwo,sd=sqrt(sigma[i]))
+}
+#12 houses with basement among 14 houses in blue earth county.
+#The probability that a house has a basement can be modeled as a Bernouli distribution.  Assuming a uniform  prior (Beta(1,1)), the posterior distribution is Beta(13,3)
+three <- rbeta(10000,13,3)
+bino <- rbinom(10000,1,three)
+four <- exp((1-bino)*y1samp+ (bino)*y2samp)
+hist(four[four<100],breaks=0:100,col="blue",main="Future radon measurements 
+in Blue Earth County")
+final<- sort(four)
+#mean and 95% predictive interval
+mean(four)
+final[c(250,9750)]
+
+
+#######################################
+#R code for Third Problem
+#######################################
+#setting working directory
+setwd("C:\\Users\\mohammed\\Desktop\\hw2")
+#Reading in Data: 
+datanew <- read.table(file="baseball.txt",header=T,sep=",")
+#subsetting the data;
+data<-subset(datanew, AB>= 100 & HR>=1)
+#extracting data:
+hits 	 <- data[,10]
+homeruns <- data[,13]
+atbats   <- data[,8]
+year     <-data[,3]
+player   <-data[,2]
+############################################
+# Problem-3
+############################################
+#batting average
+
+ba<-hits/atbats
+hist(ba, main="Histogram of Batting Average", xlab="Batting Average",ylab="Frequence",col="green")
+
+# identify the player season with the best batting average
+cbind(as.character(player[ba==max(ba)]),year[ba==max(ba)],hits[ba==max(ba)],atbats[ba==max(ba)],ba[ba==max(ba)])
+
+#Identifying the player with lowest batting average
+cbind(as.character(player[ba==min(ba)]),year[ba==min(ba)],hits[ba==min(ba)],atbats[ba==min(ba)],ba[ba==min(ba)])
+
+# find the average batting average
+mean(ba)
+var(ba)
+
+#Problem #4
+#function for calculating log-likelihood
+loglik.beta <- function(a,b,y){
+phi <- dbeta(y,a,b) 
+loglik <- sum(log(phi))
+return(loglik)
+}
+
+#calculating likelihood over a range of a and b
+ngrid <- 200
+a <- seq(40,45,len=ngrid) 
+b <- seq(110,130,len=ngrid) 
+loglike <- array(NA,dim=c(ngrid,ngrid))
+for(i in 1:ngrid){
+   for (j in 1:ngrid){
+      loglike[i,j] <- loglik.beta(a[i],b[j],ba)
+   }
+}
+max(loglike)
+like <- exp(loglike-max(loglike))
+#Contour Plot:
+ contour(a,b,like,main=" Contour plot of the exp(loglikelihood)", xlim = c(41.5, 44.5), ylim = c(115, 125))
+
+#Problem #5 to find the MLE from likelihood function by Grid-search algorithm.
+theta <- as.matrix(expand.grid(a,b))
+theta.grid <- theta[like==max(like)]
+theta.grid
+#Problem #5 to find the MLE from loglikelihood function by Grid-search algorithm.
+thetaone<-as.matrix(expand.grid(a,b))
+thetaone.grid<-thetaone[loglike==max(loglike)]
+thetaone.grid
+
+#Problem #6 Newton-Raphson MLE
+loglike.beta <- function(theta,y){
+return(-loglik.beta(theta[1],theta[2],y=ba))
+}
+newton <- nlminb(theta.grid,loglike.beta,y=ba)
+theta.mle <- newton$par
+theta.mle
+
+#########################
+#Problem-7
+#calculate home runs per bat
+#########################
+hra <- homeruns/atbats
+#plot histogram of home runs per bat
+hist(hra,xlim=c(0.0,0.16),main="Histogram of Home Runs per bat",xlab="HRs per bat",col="red")
+
+# identify the player season with the best Home runs per bat
+cbind(as.character(player[hra==max(hra)]),year[hra==max(hra)],homeruns[hra==max(hra)],atbats[hra==max(hra)],hra [hra==max(hra)])
+
+#identify the player season with the worst Home runs per bat
+cbind(as.character(player[hra==min(hra)]),year[hra==min(hra)],homeruns[hra==min(hra)],atbats[hra==min(hra)],hra [hra==min(hra)])
+
+# find the average Home runs per bat
+mean(hra)
+var(hra)
+
+#function for calculating log-likelihood
+loglik.beta <- function(a,b,y){
+phi <- dbeta(y,a,b) 
+loglik <- sum(log(phi))
+return(loglik)
+}
+
+ngrid <- 200
+a <- seq(1.9,2.1,len=ngrid) 
+b <- seq(65,75,len=ngrid) 
+loglike <- array(NA,dim=c(ngrid,ngrid))
+for(i in 1:ngrid){
+   for (j in 1:ngrid){
+      loglike[i,j] <- loglik.beta(a[i],b[j],hra)
+   }
+}
+like <- exp(loglike-max(loglike))
+
+#Contour Plot:
+contour(a,b,like,main=" Contour plot of the exp(loglikelihood)", xlim = c(1.9, 2.1), ylim = c(67, 73))
+
+#Problem #5 to find the MLE from likelihood function by Grid-search algorithm.
+theta <- as.matrix(expand.grid(a,b))
+theta.grid <- theta[like==max(like)]
+theta.grid
+#Problem #5 to find the MLE from loglikelihood function by Grid-search algorithm.
+thetaone<-as.matrix(expand.grid(a,b))
+thetaone.grid<-thetaone[loglike==max(loglike)]
+thetaone.grid
+
+#Newton-Raphson MLE
+loglike.beta<-function(theta,y)
+	{
+return(-loglik.beta(theta[1],theta[2],y=hra))
+	}
+newton <- nlminb(theta.grid,loglike.beta,y=hra)
+theta.mle <- newton$par
+theta.mle
+###################################################
+#####Problem-8
+###################################################
+require(msm)
+y<-hra
+#function for calculating log-likelihood
+loglik.mix <- function(alpha,mu1,sigma1,sigma2,y){
+phi1 <- dnorm(y,mu1,sqrt(sigma1)) 
+phi2 <- 2*dnorm(y,0,sqrt(sigma2))
+loglik <- sum(log((1-alpha)*phi1 + alpha*phi2))
+return(loglik)
+}
+loglike.mix <- function(theta,y){
+return(-loglik.mix(theta[1],theta[2],theta[3],theta[4],y))
+}
+#Expectation function
+estep <- function(theta,y){
+n<-length(y)
+gamma<-rep(NA,n)
+prob0 <- (1-theta[1])*dnorm(y,mean=theta[2],sd=sqrt(theta[3]))
+prob1 <- theta[1]*2*dnorm(y,0,sd=sqrt(theta[4]))
+gamma <- prob1/(prob0+prob1)
+return(gamma)
+}  
+#Maximization function
+mstep <- function(gamma,y){
+n <- length(y)
+theta <- rep(NA,4)
+theta[1] <- sum(gamma)/n#alpha
+theta[2] <- sum((1-gamma)*y)/sum(1-gamma)#mu1
+theta[3] <- sum((1-gamma)*((y-theta[2])^2))/sum(1-gamma)#sigma1
+theta[4] <- sum(gamma*(y^2))/sum(gamma)#sigma2
+return(theta)
+}
+#initial values for EM algorithm:
+theta <- c(.01,.1,1,1)
+loglike <- -loglike.mix(theta,y)
+itermat <- c(theta,loglike)
+# EM iterations:
+for (i in 1:500){
+gamma <- estep(theta, y)
+theta <- mstep(gamma, y)
+loglike <- -loglike.mix(theta,y)
+itermat <- rbind(itermat,c(theta,loglike))
+cat(i,theta,loglike,"\n")
+}
+######################
+#Problem-9
+######################
+hist(hra,xlim=c(0.0,0.16),ylim=c(0,25),xlab="Home run average",las=1,prob=TRUE)
+x <- seq(0, 1, len = 1000)
+prob0 <- (1-theta[1]) * dnorm(x, theta[2], sqrt(theta[3]))
+prob1 <- theta[1] * 2*dnorm(x, 0, sqrt(theta[4]))
+lines(x, prob1, col = 4, lwd = 2)
+lines(x, prob0, col = 2, lwd = 2)
+legend('top',c('Elite','Non-Elite'),text.col=c(2,4),bty='n',col=c(2,4),lty=1)
+
+#################################################
+#Problem-10
+#################################################
+one <- 1-estep(theta, hra)
+plot(hra,one,main="Probability of being an elite player")
+info <- data[data$name == "abreubo01", c('name', 'year')]
+probability<- one[data$name == "abreubo01"]
+hrabre <- hra[data$name == "abreubo01"]
+out <- data.frame(info, hrabre, probability)
+out
+
+########################################
+#problem-11,Repeatation of part(8)
+########################################
+require(msm)
+y<-hra
+#function for calculating log-likelihood
+loglik.mixone <- function(alpha,mu1,sigma,y){
+phi1 <- dnorm(y,mu1,sqrt(sigma)) 
+phi2 <- 2*dnorm(y,0,sqrt(sigma))
+loglik <- sum(log((1-alpha)*phi1 + alpha*phi2))
+return(loglik)
+}
+loglike.mixone <- function(theta,y){
+return(-loglik.mixone(theta[1],theta[2],theta[3],y))
+}
+#Expectation function
+estep <- function(theta,y){
+n<-length(y)
+gamma<-rep(NA,n)
+prob0 <- (1-theta[1])*dnorm(y,mean=theta[2],sd=sqrt(theta[3]))
+prob1 <- theta[1]*2*dnorm(y,0,sd=sqrt(theta[3]))
+gamma <- prob1/(prob0+prob1)
+return(gamma)
+}  
+
+#Maximization function
+mstep <- function(gamma,y){
+n <- length(y)
+theta <- rep(NA,3)
+theta[1] <- sum(gamma)/n # mixing parameter alpha
+theta[2] <- sum((1-gamma)*y)/sum(1-gamma) # mu for elite
+#theta[3] <- sum(gamma*(y^2))/sum(gamma) #sigma
+theta[3] <- sum(gamma*(y^2) + (1-gamma)*(y-theta[2])^2)/n
+return(theta)
+}
+#initial values for EM algorithm:
+theta <- c(.01,.1,1)
+loglike <- -loglike.mixone(theta,y)
+itermat <- c(theta,loglike)
+
+#Running EM iterations:
+for (i in 1:500){
+gamma <- estep(theta, y)
+theta <- mstep(gamma, y)
+loglike <- -loglike.mixone(theta,y)
+itermat <- rbind(itermat,c(theta,loglike))
+cat(i,theta,loglike,"\n")
+}
+##########################################
+#Problem-11, Repeatation of part(9)
+##########################################
+hist(hra,xlim=c(0.0,0.16),ylim=c(0,25),main="Histogram with fitted mixture 
+density for Home Run Average",las=1,prob=TRUE,xlab="hra")
+x <- seq(0, 1, len = 1000)
+prob0 <- (1-theta[1]) * dnorm(x, theta[2], sqrt(theta[3]))
+prob1 <- theta[1] * 2*dnorm(x, 0, sqrt(theta[3]))
+lines(x, prob1, col = 4, lwd = 2)
+lines(x, prob0, col = 2, lwd = 2)
+legend('top',c('Elite','Non-Elite'),text.col=c(2,4),bty='n',col=c(2,4),lty=1)
+#################################################
+#Problem-11,Repeatation of part(10)
+#################################################
+two <- 1-estep(theta, hra)
+plot(hra,two,main="Probability of being an elite player")
+info <- data[data$name == "abreubo01", c('name', 'year')]
+probability<- two[data$name == "abreubo01"]
+hrabre <- hra[data$name == "abreubo01"]
+out <- data.frame(info, hrabre, probability)
+out
+
+#################################################
+#Problem-12
+#################################################
+#function for calculating log-likelihood
+y<-hra
+loglik.mixone <- function(alpha,a,b,mu,sigma,y){
+phi1 <- dnorm(y,mu,sqrt(sigma)) 
+phi2 <- dgamma(y,a,b)
+loglikone <- sum(log((1-alpha)*phi1 + alpha*phi2))
+return(loglikone)
+}
+loglike.mixone <- function(theta,y){
+return(-loglik.mixone(theta[1],theta[2],theta[3],theta[4],theta[5],y))
+}
+loglik.mixtwo <- function(a,b,y){
+phi2 <- dgamma(y,a,b)
+phi1 <- dnorm(y,thetat[4],sqrt(thetat[5])) 
+logliktwo <- sum(log(thetat[1]*phi1 + (1-thetat[1])*phi2))
+return(logliktwo)
+}
+loglike.mixtwo <- function(theta,y){
+return(-loglik.mixtwo(theta[1],theta[2],y))
+}
+
+#Expectation function
+estept <- function(theta,y){
+prob0 <- (1-theta[1])*dnorm(y,mean=theta[4],sd=sqrt,(theta5]))
+prob1 <- (theta[1])*dgamma(y,theta[2],theta[3])
+gamma <- prob1/(prob0+prob1)
+return(gamma)
+}  
+
+#Maximization function
+mstept <- function(gamma,y){
+n <- length(y)
+thetat <- rep(NA,5)
+thetat[1] <- sum(gamma)/n # alpha
+thetat[4] <- sum((1-gamma)*y)/sum(1-gamma)#mu
+thetat[5] <- sum((1-gamma)*((y-thetat[4])^2))/sum(1-gamma)#sigma
+#for moment estimate of a and b.
+mean_ne <- sum(gamma*y)/sum(gamma)
+var_ne <- sum(gamma*(y-mean_ne)^2)/sum(gamma)
+beta_est <- var_ne / mean_ne
+alpha_est <- mean_ne / beta_est
+init_est <- c(alpha_est,beta_est)
+lower <- c(1e-10,1e-10)
+upper <- c(1e10,1e10)
+newton <- nlminb(init_est,loglike.mixtwo,y=hra,lower=lower,upper=upper)
+thetat[2] <- newton$par[1]
+thetat[3] <- newton$par[2]
+return(thetat)
+}
+
+thetat <- c(.1,1,1,.1,1)
+logliket <- -loglike.mixone(thetat,y)
+itermatt <- c(thetat,logliket)
+
+#Running EM iterations
+for (i in 1:500){
+gammat <- estept(thetat,y)
+thetat <- mstept(gammat,y)
+logliket <- -loglike.mixone(thetat,y)
+itermatt <- rbind(itermatt,c(thetat,logliket))
+cat(i,thetat,logliket,"\n")
+}
+########################################################
+#Problem-13(part of 9 )
+########################################################
+hist(hra,prob=T,main="Fitted histogram of Home-run average")
+x <- seq(0,0.3,len=1001)
+f0 <- (thetat[1])*dgamma(x,thetat[2],thetat[3])
+f1 <- (1 - thetat[1])*dnorm(x,thetat[4],sqrt(thetat[5]))
+lines(x,f0,col=2,lwd=2)
+lines(x,f1,col=3,lwd=2)
+legend('top',c('Non-Elite','Elite'),col=c(2,3),lty=1)
+########################################################
+#Problem-13(part of 10 )
+########################################################
+three <- 1-estept(thetat,hra)
+plot(hra, three, main="Probability of being an elite player",col="pink")
+hra[three==max(three)]
+#For each of Bobby Abreau's season, give the probability that he is an elite player
+cbind(as.character(player[player=="abreubo01"]), year[player=="abreubo01"],hra[player=="abreubo01"],three [player=="abreubo01"])
+
+

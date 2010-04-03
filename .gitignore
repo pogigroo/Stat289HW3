@@ -1,3 +1,10 @@
 *.tmproj
 .DH_STORE
 *~
+*.aux
+*.bbl
+*.blg
+*.log
+*.dvi
+*.ps
+*.pdf

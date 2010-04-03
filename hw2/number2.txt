@@ -1,0 +1,119 @@
+
+# -------------------------------------
+#  Exercise 2, Chapter 14 question 1
+# -------------------------------------
+
+# load library with multivariate normal sampling function
+library(MASS)
+
+# data set
+be <- c(5, 13, 7.2, 6.8, 12.8, 5.8, 9.5, 6, 3.8, 14.3, 1.8, 6.9, 4.7, 9.5)
+clay <- c(0.9, 12.9, 2.6, 3.5, 26.6, 1.5, 13, 8.8, 19.5, 2.5, 9, 13.1, 3.6, 6.9)
+good <- c(14.3, 6.9, 7.6, 9.8, 2.6, 43.5, 4.9, 3.5, 4.8, 5.6, 3.5, 3.9, 6.7)
+
+# indicator functions
+county <- rep(c('Blue Earth','Clay','Goodhue'), c(14, 14, 13))
+where <- as.factor(
+           c(rep(0, 5), 1, rep(0, 3), 1, rep(0, 4),
+           1, rep(0, 2), 1, rep(0, 5), 1, rep(0, 3), 1,
+           0, 1, 0, 1, rep(0, 9))
+           )
+            
+# data frame with them
+y <- c(be, clay, good)
+d <- data.frame(y, where, county)
+
+# ------
+#    a
+# ------
+
+# linear model
+fit <- lm(log(y) ~ where + county, data = d)
+summary(fit)
+par(mfrow = c(2,2), mar=c(3.5,3.5,2,1), mgp=c(2,.65,0))
+plot(fit)
+
+# sampling from posterior distribution
+beta.hat <- fit$coef
+s <- summary(fit)$sigma
+s2 <- s^2
+V.beta <- summary(fit)$cov.unscaled
+
+# sampling
+l <- 1000
+numparam <- length(beta.hat)
+numobs <- nrow(d)
+numdf <- numobs - numparam
+beta.samp <- matrix(NA, nrow = l, ncol = numparam)
+sigsq.samp <- rep(NA, l)
+for (i in 1:l){
+  temp <- rchisq(1, numdf)
+  cursigsq <- numdf*s2/temp
+  curvarbeta <- cursigsq*V.beta
+  curbeta <- mvrnorm(1, beta.hat, curvarbeta)
+  sigsq.samp[i] <- cursigsq
+  beta.samp[i,] <- curbeta
+}
+
+# summarizing posterior distributions
+postmean.beta <- colMeans(beta.samp)
+postmean.sigsq <- mean(sigsq.samp)
+postmean.beta
+postmean.sigsq
+
+# posterior correlation between variables
+colnames(beta.samp) <- c('b0','where=1','Clay','Goodhue')
+
+cor(cbind(beta.samp,sigsq.samp))
+
+## 95% posterior intervals
+allsamples <- cbind(beta.samp,sigsq.samp)
+postint <- t(apply(allsamples, 2, quantile, probs = c(0.025, 0.975)))
+postint
+
+# posterior histograms
+par(mfrow=c(1,1),mar=c(3.5,3.5,2,1),mgp=c(2,.65,0))
+
+# -- intercept
+hist(allsamples[,1],main=expression(beta[0]), xlab = 'Sample value', prob = TRUE)
+abline(v=c(postmean.beta[1],beta.hat[1]),col=c(2,3))
+
+# -- first floor measures
+hist(allsamples[,2],main=expression(beta[2]), xlab = 'Sample value', prob = TRUE)
+abline(v=c(postmean.beta[2],beta.hat[2]),col=c(2,3))
+
+# -- clay county
+hist(allsamples[,3],main=expression(beta[3]), xlab = 'Sample value', prob = TRUE)
+abline(v=c(postmean.beta[3],beta.hat[3]),col=c(2,3))
+
+# -- goodhue county
+hist(allsamples[,4],main=expression(beta[4]), xlab = 'Sample value', prob = TRUE)
+abline(v=c(postmean.beta[4],beta.hat[4]),col=c(2,3))
+
+# sigma^2
+hist(allsamples[,5],main=expression(sigma^2), xlab = 'Sample value', prob = TRUE)
+abline(v=c(postmean.sigsq, s2),col=c(2,3))
+
+
+# posterior predictive distribution
+# for a new covariate vector
+# -- new measure taken at the first floor in Blue Earth County
+Xstar <- c(1, 1, 0, 0)  
+Xstar <- t(Xstar)  
+ystar <- sapply(1:l, function(i){
+	xstarbeta <- Xstar%*%t(t(beta.samp[i,]))
+	ystar.samp <- rnorm(1, mean = xstarbeta, sd = sqrt(sigsq.samp[i]))
+                                   }
+                   )
+exp(mean(ystar))
+
+# -- new measure taken at the basemennt in Blue Earth County
+Xstar <- c(1, 0, 0, 0)  
+Xstar <- t(Xstar)  
+ystar <- sapply(1:l, function(i){
+	xstarbeta <- Xstar%*%t(t(beta.samp[i,]))
+	ystar.samp <- rnorm(1, mean = xstarbeta, sd = sqrt(sigsq.samp[i]))
+                                   }
+                   )
+exp(mean(ystar))
+

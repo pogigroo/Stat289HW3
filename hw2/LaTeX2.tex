@@ -1,0 +1,413 @@
+\documentclass[10pt]{article}
+\usepackage{amssymb,amsmath,graphicx,epstopdf} 
+\usepackage{graphicx}
+\usepackage[parfill]{parskip} 
+\topmargin 1.5pt
+\oddsidemargin 3pt
+\evensidemargin 3pt
+\textwidth 6.1in
+\leftmargin 3pt
+\rightmargin 3pt
+\title{HW-2}
+\author{Mohammed Chowdhury}
+\date{March 22, 2010}                                           
+\begin{document}
+\maketitle
+\begin{center}
+\textbf{First Problem, chapter-3, Question-12, Page-99}
+\end{center}
+Here the data distribution is Poisson with parameter $\lambda.$ Hence the pmf of $y_{i}$(number of fatal accidents) is given as $p(Y=y_{i})=\frac{e^{-\lambda}{\lambda^{y_{i}}}}{y_{i}!}; y_{i}=0,1,2, \dots.$ and the mean $E(y_{i})=\lambda$. We are also given that $E(y_{i})=\alpha+\beta t_{i}$ ..............(1) and hence we can write $\lambda=\alpha+\beta t_{i}.$ The estimates of $\alpha$ and $\beta$ by using simple linear regression model of $y_{i}$ on $t_{i}$(year) are respectively  1848.2606 and -0.9212 when $t_{i}$ is considered as the whole years like 1976, 1977,....., 1985. But the estimates of $\alpha$ and $\beta$ are respectively 28.8667 and -0.9212 when $t_{i}$ is considered as 1, 2,....., 10 instead of whole years. But the prediction from either models are almost same. So, we use the later model. Thus the fitted regression model is $\hat{y}=28.8677-0.9212*t_{i}.$
+\begin{center}
+\textbf{(Answer:a)}
+\end{center}
+I have two choices for a noninformative prior distribution for $\alpha$ and $\beta$. These are 
+
+(1) Uniform Prior written as $p(\alpha, \beta)\propto 1$ and 
+
+(2) Jeffreys Prior written as 
+\begin{equation*}
+\begin{split}
+p(\lambda)\propto \sqrt{I(\lambda)}&=\sqrt{E[\frac{d}{d\lambda}logf(y|\lambda)]^2}\\
+&=\sqrt{E[\frac{n-\lambda}{\lambda}]^2}\\
+&=\sqrt{\sum_{i=1}^\infty(f(y|\lambda)[\frac{n-\lambda}{\lambda}]^2}\\
+&=\sqrt{\frac{1}{\lambda}}\\
+&=\sqrt{\frac{1}{\alpha+\beta t_{i}}}.
+\end{split}
+\end{equation*}
+So the Jeffreys prior distiribution for $\alpha$ and $\beta$ is $p(\alpha, \beta|t_{i})\propto\sqrt{\frac{1}{\alpha+\beta t_{i}}}.$
+\begin{center}
+\textbf{(Answer:b)}
+\end{center}
+Since $\alpha$ and $\beta$ can take any value from $-\infty$ to $+\infty$, hence the realistic informative prior for $\alpha$ and $\beta$ might be a standard bivariate normal since it falls between $-\infty$ and $+\infty$. Coutours of standard bivariate normal is given as below. R-code for producing this contour plot is provided to another Notepad file.
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g1}
+\end{center}
+\end{figure}
+\begin{center}
+\textbf{(Answer:c)}
+\end{center}
+Under model (1), the likelihood can be written as follows:
+\begin{center}
+p(y$|\alpha$,$\beta$,$t_{i}$) = $\prod_{i=1}^{10}\frac{e^{-(\alpha+\beta t_{i})}(\alpha+\beta t_{i})^{y_{i}}}{y_{i}!}$
+\end{center}
+If we consider the prior distribution of $\alpha$ and $\beta$ as uniform i.e. p($\alpha$, $\beta$)= 1, then the posterior distribution of $\alpha$ and $\beta$ can be written as follows:
+\begin{center}
+\begin{equation*}
+\begin{split}
+p(\alpha,\beta|y_{i},t_{i})&\propto p(\alpha, \beta)p(y|\alpha,\beta,t_{i})\\
+&=\prod_{i=1}^{10}\frac{e^{-(\alpha+\beta t_{i})}(\alpha+\beta t{_i})^{y_{i}}}{y_{i}!}\\
+&=h(y_{i})exp[\sum_{i=1}^{10}y_{i}log(\alpha+\beta t_{i})-\sum_{i=1}^{10}(\alpha+\beta t_{i})]\\
+&=h(y_{i})exp[\sum_{i=1}^{10}T(Y)\eta_{i}(\theta)-A(\theta)]
+\end{split}
+\end{equation*}
+\end{center}
+Here $\eta_{i}(\theta)=log(\alpha +\beta t_{i})$, $T(Y)=y_{i},$ and $A(\theta)=\sum_{i=1}^{10}(\alpha+\beta t_{i}).$ Hence above density belongs to exponential family. Thus, $y_{i}$'s are sufficient statistics for both $\alpha$ and $\beta$ because $t_{i}'s$ are fixed and known.
+\begin{center}
+\textbf{(Answer:d)}
+\end{center}
+Since the above density belongs to an exponential family and hence the density is said to be a proper density.
+\begin{center}
+\textbf{(Answer:e)}
+\end{center}
+The crude estimate for $\alpha$ and $\beta$ are 28.86 and -.9212 respectively. The uncertainities for $\alpha$ and $\beta$ are as just their standard errors and these are are 2.74 and .4431.
+\begin{center}
+\textbf{(Answer:f)}
+\end{center}
+The contour plot for unnormalized posterior density for uniform prior is given below. R-code for producing this plot is provided to another Notepad file.
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g2}
+\end{center}
+\end{figure}
+\begin{center}
+\textbf{(Answer:g)}
+\end{center}
+Using the samples that we have drawn from the joint posterior density of $\alpha$ and $\beta$ from part(f), we have computed predicted values from the regression equation $\alpha$ + 1986$\beta$. Using these predicted values as a rate, we have drawn 1000 random Poisson samples and then draw a histogram for these random samples. The histogram is given below:
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g3}
+\end{center}
+\end{figure}
+\begin{center}
+\textbf{(Answer:h)}
+\end{center}
+95\% predictive interval for the number of fatal accidents in 1986 is (8.816362, 29.38764).
+\begin{center}
+\textbf{(Answer:i)}
+\end{center}
+My hypothetical informative prior distribution in part (b) is just bivariate normal but my posterior density in part (f) is an unnormalized density and when it is normalized it becomes a Poisson regression model. But for part (g), it is a predictive poisson regression model. So, my prior density is different from my two posterior density that I got from part (f) and part (g).
+\begin{center}
+\textbf{ Second Problem, chapter-14, Question-1, Page-385}
+\end{center}
+\begin{center}
+\textbf{(Answer:a)}
+\end{center}
+Our required regression model has four indicator variables and do not have any intercept. Three indicator variables for three different counties and one indicator varible represents whether the mesurements are taken from the basement or from the first floor. The model does not include an intercept term in order to make the design matrix nonsingular. The model is given as below: 
+\begin{center}
+$logy_{i}=\beta_{1}I_{i}+\beta_{2}x_{1i}+\beta_{3}x_{2i}+\beta_{4}x_{3i}+e_{i}$
+\end{center}
+where $I_{i}$ is an indicator of the measurement taken either from basement or from the first floor, and  other $x_{i}'s$ are the indicator variables of counties. The estimates of $\beta_{1}, \beta_{2}, \beta_{3}$ and $\beta_{4}$ are 0.3283398 1.6277922 1.5479870 and 1.5898518 respectively. The standard error of the estimates of corresponding $\beta$'s are 0.3154507, 0.3429725, 0.3086929 and 0.3452423. Now if we fit a linear regression using uniform prior on ($\beta$, log$\sigma$), we know from standard regression analysis and probability distribution theory that
+\begin{center} 
+$\beta|\sigma^{2},y_{i}\sim N(\hat{\beta}, V_{\beta} \sigma^{2})$
+and $\sigma^{2}|y_{i} \sim Inv-\chi^{2}(n-k,s^{2})$
+\end{center}
+and hence the joint density of $\beta$ and $\sigma^{2}$ is given as
+\begin{center}
+\begin{equation}
+p(\beta,\sigma^{2}|y_{i}) = p(\beta|\sigma^{2},y_{i})*P(\sigma^{2}|y_{i})
+\end{equation}
+\end{center}
+According to pages 356 and 357 of our text book, we have
+\begin{center}
+\begin{equation}
+\hat{\beta}=(X^{T}X)^{-1}X^{T}Y
+\end{equation}
+\end{center}
+\begin{center}
+\begin{equation}
+V_{\beta}=(X^{T}X)^{-1}
+\end{equation}
+\end{center}
+\begin{center}
+\begin{equation}
+s^{2}=\frac{1}{n-k}(y-x\hat{\beta}^{T})(y-x\hat{\beta})
+\end{equation}
+\end{center}
+
+Now it is easy to draw samples from the posterior distribution of (1), by (i) computing $\hat{\beta}$ and $V_{\beta}$ from (2) and (3), (ii) computing $s^{2}$ from (4), (iii) drawing $\sigma^{2}$ from the scaled inverse-$\chi^{2}$ distribution mentioned above, and (iv) drawing $\beta$ from the multivariate normal distribution also discussed above. Now we can draw 10000 simulation of ($\beta$ and $\sigma$) and then compute the required quantiles. These quantiles are given below:
+\begin{center}
+\begin{tabular}{|l|ccc|}
+\multicolumn{4}{c}{Posterior Quantiles}\\\hline 
+Quantity of Interest & 25\% & 50\% & 75\% \\ \hline 
+exp($\beta_{2}$) & 4.0 & 5.1  & 6.5  \\ \hline 
+exp($\beta_{1}$+$\beta_{2}$) & 6.1 & 7.1 & 8.2  \\ \hline
+exp($\beta_{3}$) & 3.8 & 4.7 & 5.8   \\ \hline 
+exp($\beta_{1}$+$\beta_{3}$) & 14.0 & 18.3 & 22.5   \\ \hline
+exp($\beta_{4}$) & 3.9 & 4.9 & 6.2   \\ \hline 
+exp($\beta_{1}$+$\beta_{4}$) & 18.7 & 26.5 & 29.9   \\ \hline 
+exp($\beta_{1}$) & 4.2 & 5.5 & 6.3   \\ \hline
+exp($\sigma$) & 2.1 & 2.2 & 2.4   \\ \hline
+\end{tabular}
+\end{center}
+The first six lines of the above representation gives the estimates and uncertainities for the average county radon level with regard to basement and without basements. The range of short term measurement of radon concentration(in picoCuries/liter) for houses with basement lies between 4 to 8.
+\begin{center}
+\textbf{(Answer : b)}
+\end{center}
+The posterior predictive distribution is given below:
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g14}
+\end{center}
+\end{figure}
+The posterior predictive interval in the original unlogged scale is ( 1.072491 , 44.130409) 
+
+\begin{center}
+\textbf{Third Problem, Baseball Problem}
+\end{center}
+\begin{center}
+\textbf{(3)}
+\end{center}
+\begin{newpage}
+The histogram of the batting average is given below:
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g4}
+\end{center}
+\end{figure}
+The player of the season with highest batting average is delluda01 in year 1999 and his highest batting average is 0.40. The R-output is given below: 
+
+"delluda01" "1999" "43" "109" "0.394495412844037"
+
+The player of the season with lowest batting average is benjami01 in year 1991 and his lowest batting average is 0.12. The R-output is given below:
+
+"benjami01" "1991" "13" "106" "0.122641509433962"
+
+The average batting average is  0.2632271.
+\begin{center}
+\textbf{(4)}
+\end{center}
+The beta distribution with parameters $a$ and $b$ is given as follows:
+
+$f(x|a,b)=\frac{1}{Beta(a,b)}x^{a-1}(1-x)^{b-1}; 0\leq x \leq 1$
+
+The likelihood function of the above beta distribution is given as follows:
+
+$L=(\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)})^n\prod_{i=1}^{n}x_{i}^{a-1}(1-x_{i})^{b-1}$
+
+The log likelihood function for the above beta distribution is given as follows:
+
+$logL=nlog\Gamma(a+b)-nlog(\Gamma(a)\Gamma(b))+(a-1)\sum_{i}^{n}logx_{i}+(b-1)\sum_{i}^{n}log(1-x_{i})$
+
+We know the sample mean and sample variance of the batting average are .2622 and .0011 and the mean and variance of Beta distribution are $E(x)=\frac{a}{a+b}=.2622$ and $var(x)=.0011=\frac{ab}{(a+b)^2(a+b+1)}$. Solving the above two equations simultaneously, we get the moment estimates of $a$ and $b$ as 45.84 and 129.01. Now to get contour plot of loglikelihood as a function of $a$ and $b$, we have considered the range of $a$ between 41.5 to 44.5 and the range of $b$ between 115 and 125. Instead of getting contour plot of loglikelihood, I have considered a contour plot of exponenent of scaled log likelihood and in figure it is written as exp(loglikelihood), because the contour looks good. This contour plot is given below:
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g5}
+\end{center}
+\end{figure}
+\begin{center}
+\textbf{(5)}
+\end{center}
+
+The maximum likelihood estimates of $a$ and $b$ by grid search algorithm are respectively given as  42.98995 and 120.35176. Based on these estimates, the variance of batting average is
+\begin{equation*}
+\begin{split}
+var(y)&=\frac{ab}{(a+b)^2(a+b+1)}\\
+&=\frac{42.98*120.35}{( 42.98995+120.35176)^2( 42.98995+120.35176+1)}\\
+&=0.001179697. 
+\end{split}
+\end{equation*}
+The actual variance of batting average is  0.001160399.
+\begin{center}
+\textbf{(6)}
+\end{center}
+By using the Newton-Raphson algorithm, we have found the maximum likelihood estimates of $a$ and $b$ as 42.93943 and 120.20048 respectively. The estimates of $a$ and $b$ obtained by the both methods are same.
+\begin{center}
+\textbf{part(7)}
+\end{center}
+\begin{center}
+\textbf{Repeatation of part(3) to part(6) for home run average}
+\end{center}
+The histogram of the home run average is given below:
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g6}
+\end{center}
+\end{figure}
+The player of the season with highest home run average is bondsba01 in year 2001 and his highest home run average is 0.15. The R-output is given below::
+
+"bondsba01" "2001" "73" "476" "0.153361344537815"
+
+The player of the season with lowest home run average is millafe01 in year 1975 and his lowest home run average is 0.0014. The R-output is given below:
+
+"millafe01" "1975" "1"  "676" "0.0014792899408284"
+
+The average home run average is  0.02752245.
+\begin{center}
+\textbf{4}
+\end{center}
+The beta distribution with parameters $a$ and $b$ is given as follows:
+\begin{center}
+$f(x|a,b)=\frac{1}{Beta(a,b)}x^{a-1}(1-x)^{b-1}; 0\leq x \leq 1$
+\end{center}
+The likelihood function of the above beta distribution is given as follows:
+
+$L=(\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)})^n\prod_{i=1}^{n}x_{i}^{a-1}(1-x_{i})^{b-1}$
+
+The log likelihood function for the above beta distribution is given as follows:
+
+$logL=nlog\Gamma(a+b)-nlog(\Gamma(a)\Gamma(b))+(a-1)\sum_{i}^{n}logx_{i}+(b-1)\sum_{i}^{n}log(1-x_{i})$
+
+We know the sample mean and sample variance of the batting average are .2622 and .0011 and the mean and variance of Beta distribution are $E(x)=\frac{a}{a+b}=0.0275$ and $var(x)=0.00034=\frac{ab}{(a+b)^2(a+b+1)}$. Solving the above two equations simultaneously, we get the moment estimates of $a$ and $b$ as 2.13 and 75.32. Now to get contour plot of loglikelihood as a function of $a$ and $b$, we have considered the range of $a$ between 1.9 to 2.1 and the range of $b$ between 67 and 73. Instead of getting contour plot of loglikelihood, I have considered a contour plot of exponential of scaled log likelihood and in figure it is written as exp(loglikelihood), because in this way, the contour looks good. This contour plot is given below:
+\begin{newpage}
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g7}
+\end{center}
+\end{figure}
+
+\begin{center}
+\textbf{5}
+\end{center}
+The maximum likelihood estimates of $a$ and $b$ by grid search algorithm are respectively given as 1.976382 and 69.874372. Based on these estimates, the variance of home run average is
+\begin{equation*}
+\begin{split}
+var(y)&=\frac{ab}{(a+b)^2(a+b+1)}\\
+&=\frac{1.976382*69.874372}{(1.976382+69.874372)^2(1.976382+69.874372+1)}\\
+&= 0.0003671911. 
+\end{split}
+\end{equation*}
+The actual variance for home run average is 0.0003420784.
+\begin{center}
+\textbf{6}
+\end{center}
+By using the Newton-Raphson algorithm, the maximum likelihood estimates of $a$ and $b$ are respectively as 1.976615 and 69.878635. The estimates of $a$ and $b$ obtained by the both methods are almost same.
+\begin{center}
+\textbf{8}
+\end{center}
+For this problem, we are fitting a two coponents mixture model in such a way that the model has a normally distributed elite group (with unknown mean and variance) and a truncated normal distribution of non elite group in which no negetive values are allowed. By considering fixed mode(mean)=$\mu_{2}$ of truncated normal distribution, we have the parameter space as $\theta$=($\alpha$, $\mu_{1}$, $\sigma_{1}^{2}$, $\sigma_{2}^{2}$). We have to estimate each of these parameters by using EM algorithm. The complete data loglikelihood for this model is given as follows:
+\begin{center}
+$logL=\sum_{i=1}^{n}log[(1-\alpha)N(\mu_{1},\sigma_{1}^2)+\alpha N(0,\sigma_{1}^{2})]$
+\end{center}
+where second distribution is a truncated normal which takes value between 0 to $\infty$. After 500 interations, the maximum likelihood estimates of $\alpha,\mu_{1},\sigma_{1}^{2}$ and $\sigma_{2}^{2}$ are respectively given as  0.842678 0.02967973 0.0001398999 and 0.001114233. The value of the likelihood function corresponding to these estimates is 29119.99.
+\begin{center}
+\textbf{9}
+\end{center}
+Histogram of the home run average together with two fitted densities for elite and non-elite group corresponding to the above two components mixture models is given below: 
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g8}
+\end{center}
+\end{figure}
+\begin{center}
+\textbf{10}
+\end{center}
+The probability that Bobby Abreu is an elite player for each of his seasons is given below:
+\begin{center}
+  \begin{tabular}{ |Name | Year | HRABRE | Probability| }  
+  \hline
+  Name     & Year &   HRABRE   & Probability\\ \hline 
+abreubo01  & 1997 & 0.01595745 & 0.2477521\\ \hline
+abreubo01  & 1998 & 0.03420523 & 0.6891420\\ \hline
+abreubo01  & 1999 & 0.03663004 & 0.7406758\\ \hline
+abreubo01  & 2000 & 0.04340278 & 0.8528564\\ \hline
+abreubo01  & 2001 & 0.05272109 & 0.9388239\\ \hline
+abreubo01  & 2002 & 0.03496503 & 0.7058898\\ \hline
+abreubo01  & 2003 & 0.03466205 & 0.6992743\\ \hline
+abreubo01  & 2004 & 0.05226481 & 0.9360276\\ \hline
+\end{tabular}
+\end{center}
+The graph of the above probability function is given below:
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g11}
+\end{center}
+\end{figure}
+
+\begin{center}
+\textbf{11-Repeatation of (8)}
+\end{center}
+For this problem, we are fitting a two coponents mixture model in such a way that the model has a normally distributed elite group (with unknown mean and variance) and a truncated normal distribution of non elite group in which no negetive values are allowed but the variance is equal to the elite group. By considering fixed mode(mean)=$\mu_{2}$ of truncated normal distribution, we have the parameter space as $\theta$=($\alpha$, $\mu$, $\sigma^{2}$). We have to estimate each of these parameters by using EM algorithm. The complete data loglikelihood for this model is given as follows:
+\begin{center}
+$logL=\sum_{i=1}^{n}log[(1-\alpha)N(\mu,\sigma^2)+\alpha N(0,\sigma^{2})]$
+\end{center}
+where second distribution is a truncated normal which takes value between 0 to $\infty$. After 500 interations, the maximum likelihood estimates of $\alpha,\mu$, and $\sigma^{2}$ are respectively given as  0.5149798 0.03875853 and 0.0003709232 . The value of the likelihood function corresponding to these estimates is 28907.45.
+
+\begin{center}
+\textbf{11-Repeatation of (9)}
+\end{center}
+Histogram of the home run average together with two fitted densities for elite and non-elite group under the equal variance assumption corresponding to the above two components mixture models is given below: 
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g9}
+\end{center}
+\end{figure}
+\begin{center}
+\textbf{11-Repeatation of (10)}
+\end{center}
+The probability that Bobby Abreu is an elite player for each of his seasons is given below:
+\begin{center}
+  \begin{tabular}{ |Name | Year | HRABRE | Probability| }
+    \hline
+Name       & Year &   HRABRE   & Probability \\ \hline
+abreubo01  & 1997 & 0.01595745 & 0.2477521\\ \hline
+abreubo01  & 1998 & 0.03420523 & 0.6891420\\ \hline
+abreubo01  & 1999 & 0.03663004 & 0.7406758\\ \hline
+abreubo01  & 2000 & 0.04340278 & 0.8528564\\ \hline
+abreubo01  & 2001 & 0.05272109 & 0.9388239\\ \hline
+abreubo01  & 2002 & 0.03496503 & 0.7058898\\ \hline
+abreubo01  & 2003 & 0.03466205 & 0.6992743\\ \hline
+abreubo01  & 2004 & 0.05226481 & 0.9360276\\ \hline
+\end{tabular}
+\end{center}
+The graph of the above probability function is given below:
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g12}
+\end{center}
+\end{figure}
+\begin{center}
+\textbf{12}
+\end{center}
+For this problem, we are fitting a two coponents mixture model in such a way that the model has a normally distributed elite group (with unknown mean and variance) and a gamma distribution of non elite group. The parameter space of this mixture model is given by as $\theta$=($\alpha$, $a$, $b$, $\mu$, $\sigma^{2}$). We have to estimate each of these parameters by using EM algorithm. The complete data loglikelihood for this model is given as follows:
+\begin{center}
+$logL=\sum_{i=1}^{n}log[(1-\alpha)N(\mu,\sigma^2)+\alpha Gamma(a,b)$
+\end{center}
+After 500 interations, the maximum likelihood estimates of $\alpha$, $a$, $b$, $\mu$, and $\sigma^{2}$ are respectively given as 0.5306127, 2.513056, 159.7139, 0.04024837 and 0.0002984259. The value of the likelihood function corresponding to these estimates is 29324.28.
+
+\begin{center}
+\textbf{13-Repeatation of part(9)}
+\end{center}
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g13}
+\end{center}
+\end{figure}
+\begin{center}
+\textbf{13-Repeatation of part(10)}
+\end{center}
+The probability that Bobby Abreu is an elite player for each of his seasons is given below:
+\begin{center}
+  \begin{tabular}{ |Name | Year | HRABRE | Probability| }
+    \hline
+    Name  &  Year  &          HRABRE      &       Probability \\ \hline   
+abreubo01 &  1997  &   0.0159574468085106 &  0.165474046331559\\ \hline
+abreubo01 &  1998  &   0.03420523138833   &  0.744626676564366\\ \hline
+abreubo01 &  1999  &   0.0366300366300366 &  0.801079302016268\\ \hline
+abreubo01 &  2000  &   0.0434027777777778 &  0.902324345980002\\ \hline
+abreubo01 &  2001  &   0.0527210884353742 &  0.959818232641335\\ \hline
+abreubo01 &  2002  &   0.034965034965035  &  0.763629949253822\\ \hline
+abreubo01 &  2003  &   0.0346620450606586 &  0.756197408421888\\ \hline
+abreubo01 &  2004  &   0.0522648083623693 &  0.958206785880972\\ \hline
+\end{tabular}
+\end{center}
+
+The graph of the above probability function is given below:
+\begin{figure}[h]
+\begin{center}
+\includegraphics{g15}
+\end{center}
+\end{figure}
+\end{document}
+
+
