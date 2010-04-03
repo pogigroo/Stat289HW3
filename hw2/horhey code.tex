@@ -1,0 +1,160 @@
+\documentclass[12pt]{article} 
+\oddsidemargin 0.27in % left margin (1+0.27in)
+\textwidth 6.1in % text wide
+\topmargin 0.2in % superior margin (1 + 0.5in)
+\textheight 8.0in % text length (height)
+\parindent 1em % indentation
+\parskip 2ex % lines per paragraph (separation)
+\usepackage[latin1]{inputenc}
+\usepackage{amsfonts,amssymb,latexsym,amsmath}
+\usepackage[dvips]{graphicx,color,graphics}
+\usepackage[spanish]{babel}
+\usepackage{multicol}
+\usepackage{verbatim}
+\renewcommand{\baselinestretch}{1} % line separation
+\definecolor{purpura}{cmyk}{0.45,0.86,0,0}
+\definecolor{azul}{rgb}{0,0,1}
+\definecolor{rojo}{rgb}{1,0,0}
+\definecolor{gris}{gray}{0.5}
+\decimalpoint      
+\title{HW-2}
+\author{Mohammed Chowdhury}
+\date{March 21, 2010}                                           
+\begin{document}
+\maketitle
+\begin{center}
+\textbf{First Problem, 12, Chapter-3, page-99:}
+\end{center}
+Here the data distribution is Poisson with parameter $\lambda.$ Hence the pmf of $y_{i}$(number of fatal accidents) is given as $p(Y=y_{i})=\frac{e^{-\lambda}{\lambda^{y_{i}}}}{y_{i}!}; y_{i}=0,1,2, \dots.$ and the mean $E(y_{i})=\lambda$. We are also given that $E(y_{i})=\alpha+\beta t_{i}$ ..............(1) and hence we can write $\lambda=\alpha+\beta t_{i}.$ The estimate $\alpha$ and $\beta$ by using simple linear regression model of $y_{i}$ on $t_{i}$(year) are respectively  1848.2606 and -0.9212 when $t_{i}$ is considered as the whole years like 1976, 1977,....., 1985. But the estimate of $\alpha$ and $\beta$ are respectively 28.8667 and -0.9212 when $t_{i}$ is considered as 1, 2,....., 10 instead of whole years. But the prediction from either models are almost same. So, we use the later model. Thus the fitted regression model is $\hat{y}=28.8677-0.9212*t_{i}.$
+
+\textbf{(a)}
+
+I have two choices for a noninformative priors distribution for $\alpha$ and $\beta$. These are 
+
+(1) Uniform Prior written as $p(\alpha, \beta)\propto 1$ and 
+
+(2) Jeffreys Prior written as  
+
+\begin{equation*}
+\begin{split}
+p(\lambda)\propto \sqrt{I(\lambda)}&=\sqrt{E[\frac{d}{d\lambda}logf(y|\lambda)]^2}\\
+&=\sqrt{E[\frac{n-\lambda}{\lambda}]^2}\\
+&=\sqrt{\sum_{i=1}^\infty(f(y|\lambda)[\frac{n-\lambda}{\lambda}]^2}\\
+&=\sqrt{\frac{1}{\lambda}}\\
+&=\sqrt{\frac{1}{\alpha+\beta t_{i}}}.
+\end{split}
+\end{equation*}
+
+So the Jeffreys Prior distiribution for $\alpha$ and $\beta$ is $p(\alpha, \beta|t_{i})\propto\sqrt{\frac{1}{\alpha+\beta t_{i}}}.$
+
+\textbf{(b)}
+
+Since $\alpha$ and $\beta$ can take any value from $-\infty$ to $+\infty$, hence the realistic informative prior for $\alpha$ and $\beta$ might be a standard bivariate normal since it falls between $-\infty$ and $+\infty$. Coutours of standard bivariate normal is given as below. R-code for producing this contour plot is provided to another Notepad file. 
+\newpage
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.5]{graph1.pdf}
+\end{figure}
+
+\newpage
+\textbf{(c)}
+
+Under model (1), the likelihood can be written as follows:
+
+$p(y|\alpha,\beta,t_{i}) = \prod_{i=1}^{10}\frac{e^{-(\alpha+\beta t_{i})}(\alpha+\beta t_{i})^{y_{i}}}{y_{i}!}$
+
+If we consider the prior distribution of $\alpha$ and $\beta$ as uniform i.e. $p(\alpha, \beta)= 1$, then the posterior distribution of $\alpha$ and $\beta$ can be written as follows:
+\begin{equation*}
+\begin{split}
+p(\alpha,\beta|y_{i},t_{i})&\propto p(\alpha, \beta)p(y|\alpha,\beta,t_{i})\\
+&=\prod_{i=1}^{10}\frac{e^{-(\alpha+\beta t_{i})}(\alpha+\beta t{_i})^{y_{i}}}{y_{i}!}\\
+&=h(y_{i})exp[\sum_{i=1}^{10}y_{i}log(\alpha+\beta t_{i})-\sum_{i=1}^{10}(\alpha+\beta t_{i})]\\
+&=h(y_{i})exp[\sum_{i=1}^{10}T(Y)\eta_{i}(\theta)-A(\theta)]
+\end{split}
+\end{equation*}
+
+Here $\eta_{i}(\theta)=log(\alpha +\beta t_{i})$, $T(Y)=y_{i},$ and $A(\theta)=\sum_{i=1}^{10}(\alpha+\beta t_{i}).$ Hence above density belongs to exponential family. Thus, $y_{i}$'s are sufficient statistics for both $\alpha$ and $\beta$.
+
+\textbf{(d)}
+
+Since the above density belongs to an exponential family and hence the density is said to be a proper density.
+
+\textbf{(e)}
+
+The crude estimate and uncertainties for ($\alpha,\beta$) are 28.86 and -.9212 respectively. The uncertainities for $\alpha$ and $\beta$ are as just their standard errors and these are are 2.74 and .4431.
+
+\textbf{(f)}
+
+The contour plot for unnormalized posterior density for uniform prior is given below. R-code for producing this plot is provided to another Notepad file.
+
+\newpage
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.5]{graph2.pdf}
+\end{figure}
+
+\textbf{(g)}
+
+
+
+\textbf{(h)}
+
+\textbf{(i)}
+
+\textbf{Second Problem 1, Chapter-14, page-385:}
+
+\textbf{Third Problem, Baseball Problem}
+
+\textbf{3}
+The histogram of the batting average is given below:
+
+\begin{figure}[h]
+\centering
+\includegraphics[scale=.5]{graph3.pdf}
+\end{figure}
+
+The player of the season with highest batting average is given below:
+
+"delluda01" "1999" "43" "109" "0.394495412844037"
+
+The player of the season with lowest batting average is given below:
+
+"benjami01" "1991" "13" "106" "0.122641509433962"
+
+The average batting average is  0.2632271.
+
+\textbf{4}
+
+The beta distribution with parameters $a$ and $b$ is given as follows:
+
+$f(x|a,b)=\frac{1}{Beta(a,b)}x^{a-1}(1-x)^{b-1}; 0\leq x \leq 1$
+
+The likelihood function of the above beta distribution is given as follows:
+
+$L=\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\prod_{i=1}^{n}x_{i}^{a-1}(1-x_{i})^{b-a}$
+
+The log likelihood function fo the above beta distribution is given as follows:
+
+$logL=nlog\Gamma(a+b)-nlog\Gamma(a)-nlog\Gamma(b)+(a-1)\sum_{i}^{n}logx_{i}+(b-1)\sum_{i}^{n}log(1-x_{i})$
+
+\textbf{5}
+
+\textbf{6}
+
+\textbf{7}
+
+\textbf{8}
+
+\textbf{9}
+
+\textbf{10}
+
+\textbf{11}
+
+\textbf{12}
+
+\textbf{13}
+\end{document}
+
+
+
