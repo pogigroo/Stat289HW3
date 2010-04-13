@@ -7,8 +7,8 @@ logpost.mutau <- function(mu, tau, y=data$esteffect, sig=data$seeffect){
 	return(logpost)
 }
 
-mugrid <- ppoints(100)*20 # mu between 0 and 
-taugrid <- ppoints(100)*5 #per the hint
+mugrid <- ppoints(100)*20-5
+taugrid <- ppoints(100)*10 #per the hint
 
 logpost <- matrix(NA,100,100)
 for (i in 1:100){ 
