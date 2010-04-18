@@ -7,47 +7,32 @@ logpost.mutau <- function(mu, tau, y=data$esteffect, sig=data$seeffect){
 	return(logpost)
 }
 
-mugrid <- ppoints(1000)*20-3
-taugrid <- ppoints(1000)*4 #smaller, to aid numerical integration
+vlogpost <- Vectorize(logpost.mutau)
 
-logpost <- matrix(NA,1000,1000)
-for (i in 1:1000){ 
-  for (j in 1:1000){
-    logpost[i,j] <- logpost.mutau(mugrid[i],taugrid[j])
-  }
-}
+n.grid <- 500
+mu.grid <- ppoints(n.grid)*25-4.5
+tau.grid <- ppoints(n.grid)*10
 
+vals <- data.matrix(expand.grid(mu.grid, tau.grid))
+
+logpost<-vlogpost(vals[,1],vals[,2])
 post <- exp(logpost-max(logpost))
 post <- post/sum(post)
 
-######################################################################
-# Numerical integration is easier than deriving the marginal 
-# conditionals
-######################################################################
-post.mu.weights <- apply(post,1,sum)
+# ind <- 1:length(post)
+samp.ind <- sample.int(length(post), size = 1000, replace = TRUE, prob = post)
+hist(samp.ind)
+samp.post <- vals[samp.ind, ]
 
-post.mu.draws <- sample(mugrid, size=1000, replace=T, prob=post.mu.weights)
-post.tau.draws <- array(NA, 1000)
-for (i in post.mu.draws) {
-	post.tau.draws[i] <- sample(taugrid, size=1, prob=post[mugrid==i, ])
-}
+summary(samp.post[,1])
+mean(samp.post[,1])
+quantile(samp.post[,1],c(0.025,0.5,0.975))
 
-mean(post.mu.draws)
-quantile(post.mu.draws,c(0.025,0.5,0.975))
-mean(post.tau.draws)
-quantile(post.tau.draws,c(0.025,0.5,0.975))
-summary(post.tau.draws)
-hist(post.tau.draws)
+summary(samp.post[,2])
+mean(samp.post[,2])
+quantile(samp.post[,2],c(0.025,0.5,0.975))
 
-######################################################################
-# Numerically integrating over mu isn't as stable as the above
-######################################################################
-# post.tau.weights <- apply(post,2,sum)
-# post.tau.draws <- sample(taugrid, size=1000, replace=T, prob=post.tau.weights)
-# post.mu.draws <- array(NA, 1000)
-# for (i in post.tau.draws) {
-# 	post.mu.draws[i] <- sample(mugrid, size=1, prob=post[,taugrid==i])
-# }
-# 
-# summary(post.mu.draws)
-# summary(post.tau.draws)
+#points(quantile(vals[,1],c(0.025,0.5,0.975)), quantile(vals[,2],c(0.025,0.5,0.975)), pch=19)
+
+# boxplot(list(vals[,1], vals[,2]), names=c("mu","tausq"))
+
