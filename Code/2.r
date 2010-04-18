@@ -2,17 +2,17 @@ data <- read.table("../SAT.dat",header = TRUE)
 
 logpost.mutau <- function(mu, tau, y=data$esteffect, sig=data$seeffect){
 	logprior <- -log(tau)/2
-	loglike  <- sum(log(dnorm(y, mean=mu, sd=sqrt(sig^2 + tau))))
+	loglike  <- sum(dnorm(y, mean=mu, sd=sqrt(sig^2 + tau), log = TRUE))
 	logpost <- logprior + loglike
 	return(logpost)
 }
 
-mugrid <- ppoints(100)*20-5
-taugrid <- ppoints(100)*10 #per the hint
+mugrid <- ppoints(1000)*20-3
+taugrid <- ppoints(1000)*10 #per the hint
 
-logpost <- matrix(NA,100,100)
-for (i in 1:100){ 
-  for (j in 1:100){
+logpost <- matrix(NA,1000,1000)
+for (i in 1:1000){ 
+  for (j in 1:1000){
     logpost[i,j] <- logpost.mutau(mugrid[i],taugrid[j])
   }
 }
@@ -20,4 +20,5 @@ for (i in 1:100){
 post <- exp(logpost-max(logpost))
 post <- post/sum(post)
 
-contour(mugrid,taugrid,post, drawlabels=FALSE)
+par(mar=c(3.5,3.5,2,1), mgp=c(2,.65,0), las=1, cex.main=1.5)
+contour(mugrid,taugrid,post, ylim=c(0,0.6), drawlabels=FALSE, main= expression(paste("Marginal Posterior Distribution of ", plain(p)(mu,tau^2))))
