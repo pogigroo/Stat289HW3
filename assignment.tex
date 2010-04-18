@@ -85,6 +85,24 @@ We will assume that $\si^2=(\sigma^2_1,\ldots,\sigma^2_n)$ are all known without
 	
 	\item Use the grid sampling method to get 1000 samples from $p(\mu,\tau^2|\y,\si^2)$. Calculate the mean, median and 95\% posterior interval for $\mu$ and $\tau^2$.
 	
+	\begin{tabular}{c|cccc}
+	         & Mean & Median &  95\% Interval & \\
+	\hline
+	$\mu$    & 7.40 & 7.33 & -0.11 & 14.87\\
+	$\tau^2$ & 0.81 & r3c3 & r3c4 & r3c5\\
+	\end{tabular}
+	
+	> mean(post.mu.draws)
+	[1] 7.4083
+	> quantile(post.mu.draws,c(0.025,0.5,0.975))
+	   2.5%     50%   97.5% 
+	-0.1115  7.3300 14.8730 
+	> mean(post.tau.draws)
+	[1] 0.810112
+	> quantile(post.tau.draws,c(0.025,0.5,0.975))
+	  2.5%    50%  97.5% 
+	0.8175 0.8175 0.8175 
+	>
 	\item Write out the distribution $p(\theta_i|\mu,\tau^2,\y,\si^2)$. Use the 1000 samples of $\mu$ and $\tau^2$ to draw 1000 samples of each $\theta_i$. Calculate the mean of each $\theta_i$ and compare to the observed treatment effects $y_i$.
 	
 	\item For Questions 5-7, consider $\tau^2$ to be fixed and equal to $\tau^2 = \mbox{median}(\tau^2)$ that you calculated in Question 3. We now use a Gibbs sampler to draw samples from the posterior distribution $p(\mu,\bth|\y,\si^2)$. Remember that $\tau^2$ is now a known quantity in this question, so we do not need to calculate the posterior distribution for it. Give the conditional distributions of the remaining unknown parameters given the other parameters.
