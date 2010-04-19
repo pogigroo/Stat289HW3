@@ -67,7 +67,7 @@ We will assume that $\si^2=(\sigma^2_1,\ldots,\sigma^2_n)$ are all known without
 
 
 % TODO replace \mboxes for distribution with macros and cleaner shortcuts
-	\item The first approach is based on the realization that we can actually integrate out each $\theta_i$ from the above distribution, giving us the marginal distribution of our treatment effects $y_i$: $$ y_i \sim \mbox{Normal}(\mu,\sigma^2_i+\tau^2) $$ Write out the marginal posterior distribution of $p(\mu,\tau^2|\y,\si^2)$, and evaluate this posterior distribution over a grid of values of $\mu$ and and $\tau^2$. Use a grid of (0,10) for $\tau^2$.
+	\item The first approach is based on the realization that we can actually integrate out each $\theta_i$ from the above distribution, giving us the marginal distribution of our treatment effects $y_i$: $$ y_i \sim \mbox{Normal}(\mu,\sigma^2_i+\tau^2) $$ 
 	
 	The marginal posterior distribution of $p(\mu,\tau^2|\y,\si^2)$ can be factored into a proportional product of the prior and the marginal distribution of the treatment effects:
 		\begin{align*}
@@ -81,29 +81,20 @@ We will assume that $\si^2=(\sigma^2_1,\ldots,\sigma^2_n)$ are all known without
 			\includegraphics[width=0.6\textwidth]{img/2jointlikelihood.pdf}
 	\end{figure}
 	
-	The solution to this question can be found on pg. 135-136 of the book
 	
 	\item Use the grid sampling method to get 1000 samples from $p(\mu,\tau^2|\y,\si^2)$. Calculate the mean, median and 95\% posterior interval for $\mu$ and $\tau^2$.
+	\begin{center}
+		\begin{tabular}{c|ccc}
+		         & Mean & Median &  95\% Interval  \\
+		\hline
+		$\mu$    & 7.75 & 7.72 & $(-0.07, 16.42)$\\
+		$\tau^2$ & 3.34 & 2.57 & $(0.03, 9.37)$\\
+		\end{tabular}	
+	\end{center}
 	
-	\begin{tabular}{c|cccc}
-	         & Mean & Median &  95\% Interval & \\
-	\hline
-	$\mu$    & 7.40 & 7.33 & -0.11 & 14.87\\
-	$\tau^2$ & 0.81 & r3c3 & r3c4 & r3c5\\
-	\end{tabular}
+	\item The parameters $\theta_i$ are independent in the prior distribution, given $\mu$ and $\tau$. As a result $\theta_i|\mu,\tau^2,\y,\si^2$ are independent and normally distributed.
 	
-	> mean(post.mu.draws)
-	[1] 7.4083
-	> quantile(post.mu.draws,c(0.025,0.5,0.975))
-	   2.5%     50%   97.5% 
-	-0.1115  7.3300 14.8730 
-	> mean(post.tau.draws)
-	[1] 0.810112
-	> quantile(post.tau.draws,c(0.025,0.5,0.975))
-	  2.5%    50%  97.5% 
-	0.8175 0.8175 0.8175 
-	>
-	\item Write out the distribution $p(\theta_i|\mu,\tau^2,\y,\si^2)$. Use the 1000 samples of $\mu$ and $\tau^2$ to draw 1000 samples of each $\theta_i$. Calculate the mean of each $\theta_i$ and compare to the observed treatment effects $y_i$.
+	 Use the 1000 samples of $\mu$ and $\tau^2$ to draw 1000 samples of each $\theta_i$. Calculate the mean of each $\theta_i$ and compare to the observed treatment effects $y_i$.
 	
 	\item For Questions 5-7, consider $\tau^2$ to be fixed and equal to $\tau^2 = \mbox{median}(\tau^2)$ that you calculated in Question 3. We now use a Gibbs sampler to draw samples from the posterior distribution $p(\mu,\bth|\y,\si^2)$. Remember that $\tau^2$ is now a known quantity in this question, so we do not need to calculate the posterior distribution for it. Give the conditional distributions of the remaining unknown parameters given the other parameters.
 	

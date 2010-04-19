@@ -21,7 +21,7 @@ post <- post/sum(post)
 
 # ind <- 1:length(post)
 samp.ind <- sample.int(length(post), size = 1000, replace = TRUE, prob = post)
-hist(samp.ind)
+# hist(samp.ind)
 samp.post <- vals[samp.ind, ]
 
 summary(samp.post[,1])

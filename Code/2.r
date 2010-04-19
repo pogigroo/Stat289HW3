@@ -23,4 +23,5 @@ post <- post/sum(post)
 summary(post)
 mpost <- matrix(post, n.grid,n.grid)
 
+par(mar=c(3.5,3.5,2,1), mgp=c(2,.65,0), las=1, cex.main=1.5)  
 contour(mu.grid,tau.grid, mpost, drawlabels=FALSE, main= expression(paste("Marginal Posterior Distribution of ", plain(p)(mu,tau^2))))
