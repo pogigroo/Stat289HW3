@@ -92,9 +92,24 @@ We will assume that $\si^2=(\sigma^2_1,\ldots,\sigma^2_n)$ are all known without
 		\end{tabular}	
 	\end{center}
 	
-	\item The parameters $\theta_i$ are independent in the prior distribution, given $\mu$ and $\tau$. As a result $\theta_i|\mu,\tau^2,\y,\si^2$ are independent and normally distributed.
+	\item The parameters $\theta_i$ are independent in the prior distribution, given $\mu$ and $\tau$. As a result $p(\mathbf{\theta}|\mu,\tau^2,\y,\si^2)$ factors into $i$ components. Conditional on the hyperparameters, these are independent, normally distributed means with normal prior distributions.  We derived the results for this model in class: \[
+		\theta \vert \mu, \tau^2, \mathbf{y}, \mathbf{\sigma^2} \sim \mbox{Normal}(\hat{\theta_i}, V_i)
+	\]
+	where\[
+		\hat{\theta_i} = \dfrac{\frac{1}{\sigma^2_i}y_i + \frac{1}{\tau^2}\mu}{V_i} \qquad \mathrm{ and } \qquad V_i=\dfrac{1}{\frac{1}{\sigma^2_i} + \frac{1}{\tau^2}}
+	\]
 	
-	 Use the 1000 samples of $\mu$ and $\tau^2$ to draw 1000 samples of each $\theta_i$. Calculate the mean of each $\theta_i$ and compare to the observed treatment effects $y_i$.
+	 Using the samples of $\mu$ and $\tau^2$ to draw 1000 samples of each $\theta_i$, the mean of each $\theta_i$ and paired treatment effect $y_i$ is:
+\begin{center}
+	\begin{tabular}{c|ccccccccc}
+		i & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 \\
+		\hline
+		$\theta_i$ & 8.06 & 7.82 & 7.67 & 7.71 &  7.41 & 7.64 &  8.029 & 7.82 \\
+		$y_i$ &  28.0 &   8.0 &  -3.0 &   7.0 &  -1.0 &   1.0 &  18.0 &  12.0 \\
+	\end{tabular}
+\end{center}
+It's fairly obvious that the posterior predictive means are more stable, and on average lower than the sample means.
+
 	
 	\item For Questions 5-7, consider $\tau^2$ to be fixed and equal to $\tau^2 = \mbox{median}(\tau^2)$ that you calculated in Question 3. We now use a Gibbs sampler to draw samples from the posterior distribution $p(\mu,\bth|\y,\si^2)$. Remember that $\tau^2$ is now a known quantity in this question, so we do not need to calculate the posterior distribution for it. Give the conditional distributions of the remaining unknown parameters given the other parameters.
 	

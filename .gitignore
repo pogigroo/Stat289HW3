@@ -9,3 +9,4 @@
 *.ps
 *.pdf
 *.gz
+.Rhistory
