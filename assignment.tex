@@ -47,9 +47,9 @@ We will assume that $\si^2=(\sigma^2_1,\ldots,\sigma^2_n)$ are all known without
 	\begin{enumerate}
 		\item A simple transformation of $u=\tau^2$ verifies that $p(\mu,\tau)\propto 1$ corresponds to a prior for $(\mu,\tau^2)$ of $p(\mu,\tau^2) \propto \tau^{-1}$. 
 		\begin{align*}
-			u = \tau^2 &\Rightarrow \tau=\sqrt{u} & \mathrm{note: } \ 0<\tau<\infty \\
-			&\Rightarrow \dfrac{d\tau}{d u} = |\dfrac{1}{2 \sqrt{u}}| \\
-			&\Rightarrow p_u (u) = p_\tau (\tau(u)) * |\dfrac{1}{2 \sqrt{u}}| \ 
+			u = \tau^2 &\Rightarrow \tau=\sqrt{u} &  \mathrm{note: } \ 0<\tau<\infty \\
+			& \Rightarrow \dfrac{d\tau}{d u} = |\dfrac{1}{2 \sqrt{u}}| \\
+			& \Rightarrow p_u (u) = p_\tau (\tau(u)) * |\dfrac{1}{2 \sqrt{u}}| \ 
 		\end{align*}
 		This implies for $(\mu,\tau^2)$ 
 		\begin{align*}
@@ -70,10 +70,10 @@ We will assume that $\si^2=(\sigma^2_1,\ldots,\sigma^2_n)$ are all known without
 	\item The first approach is based on the realization that we can actually integrate out each $\theta_i$ from the above distribution, giving us the marginal distribution of our treatment effects $y_i$: $$ y_i \sim \mbox{Normal}(\mu,\sigma^2_i+\tau^2) $$ 
 	
 	The marginal posterior distribution of $p(\mu,\tau^2|\y,\si^2)$ can be factored into a proportional product of the prior and the marginal distribution of the treatment effects:
-		\begin{align*}
-			p(\mu,\tau^2|\y, \si^2) & \propto p(\mu,\tau^2) p(\y | \mu,\tau^2) \\
+		\begin{align}
+			p(\mu,\tau^2|\y, \si^2) & \propto p(\mu,\tau^2) p(\y | \mu,\tau^2) \nonumber\\
 			& = \frac{1}{\tau} \prod_{i=1}^8 \mbox{Normal}(y_i | \mu, \sigma_{i}^2 + \tau^2)
-		\end{align*}
+		\end{align}
 	
 	\begin{figure}[h]
 		% \caption{needs a caption}
@@ -111,7 +111,20 @@ We will assume that $\si^2=(\sigma^2_1,\ldots,\sigma^2_n)$ are all known without
 It's fairly obvious that the posterior predictive means are more stable, and on average lower than the sample means.
 
 	
-	\item For Questions 5-7, consider $\tau^2$ to be fixed and equal to $\tau^2 = \mbox{median}(\tau^2)$ that you calculated in Question 3. We now use a Gibbs sampler to draw samples from the posterior distribution $p(\mu,\bth|\y,\si^2)$. Remember that $\tau^2$ is now a known quantity in this question, so we do not need to calculate the posterior distribution for it. Give the conditional distributions of the remaining unknown parameters given the other parameters.
+	\item For Questions 5-7, consider $\tau^2$ to be fixed and equal to $\tau^2 = \mbox{median}(\tau^2)$, calculated in question 3. For the sake on convenience I will denote this $\tau_0^2$. We now use a Gibbs sampler to draw samples from the posterior distribution $p(\mu,\bth|\y,\si^2)$. The conditional distributions of the remaining unknown parameters given the other parameters are as follows:
+	\begin{align}
+		\pi(\bth, \mu | \mathbf{y}, \mathbf{\si^2}, \tau_0^2) & \propto p(\mu) p(\bth|\mu, \tau_0^2) p(\mathbf{y}| \bth, \mathbf{\si^2}) \nonumber \\
+		& = \prod_{i=1}^8 N(\theta_i|\mu, \tau_0^2) N(y_i|\theta_i, \sigma_i^2) \\
+		\pi(\theta_i|\mu, \mathbf{y}, \mathbf{\si^2}, \tau_0^2) & \propto N(\theta_i|\mu, \tau_0^2) N(y_i|\theta_i, \sigma_i^2) \nonumber \\
+		& = N(\theta_i | \hat{\sigma}_i^2, V_i)
+	\end{align}
+	as before, where \[\hat{\theta_i} = \dfrac{\frac{1}{\sigma^2_i}y_i + \frac{1}{\tau_0^2}\mu}{V_i} \qquad  \mathrm{ and } \qquad V_i=\dfrac{1}{\frac{1}{\sigma^2_i} + \frac{1}{\tau_0^2}}
+	\]
+	
+	\begin{align}
+		\pi(\mu | \bth, \mathbf{y}, \mathbf{\si^2}, \tau_0^2) & \propto \prod_{i=1}^8 N(\mu| \theta_i, \tau_0^2) \nonumber\\
+		& =  N\left(\mu | \frac{\sum\theta_i}{n} ,  \frac{\tau_0^2}{n}\right)
+	\end{align}
 	
 	\item Use a Gibbs sampler based on the conditional distributions from the previous question to obtain 1000 samples from $p(\mu,\bth|\y,\si^2)$. Make sure that you only use samples after convergence and that your 1000 samples have low autocorrelation. Calculate the mean and posterior interval for each $\theta_i$.
 	
