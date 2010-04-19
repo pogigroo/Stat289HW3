@@ -126,9 +126,23 @@ It's clear that the posterior predictive means are more stable, and on average s
 		& =  N\left(\mu \vert \frac{\sum\theta_i}{n} ,  \frac{\tau_0^2}{n}\right)
 	\end{align}
 	
-	\item Use a Gibbs sampler based on the conditional distributions from the previous question to obtain 1000 samples from $p(\mu,\bth|\y,\si^2)$. Make sure that you only use samples after convergence and that your 1000 samples have low autocorrelation. Calculate the mean and posterior interval for each $\theta_i$.
+	\item Using a Gibbs sampler based on the conditional distributions from the previous question, I obtained 1000 samples from $p(\mu,\bth|\y,\si^2)$. The code for the problem checks and removes samples before convergence and with high autocorrelation. The following table contains the mean and posterior interval for each $\theta_i$ for the resulting sample:
 	
-	\item Use your samples of $\bth$ to calculate an estimate of the posterior probability that school A offers the best program.
+	\begin{center}
+		\begin{tabular}{c|ccccccccc}
+	 & $\theta_1$ & $\theta_2$ & $\theta_3$ & $\theta_4$ & $\theta_5$ & $\theta_6$ & $\theta_7$ & $\theta_8$ & $\mu$\\
+		\hline
+	Mean & 11.25 & 8.24 & 6.76 & 8.07 & 6.19 & 6.94 & 10.32 & 8.72 & 8.31\\
+	Median & 11.27 & 8.28 & 6.74 & 8.09 & 6.15 & 6.95 & 10.32 & 8.66 & 8.29\\
+	Post. Int. & 7.90 & 4.92 & 3.31 & 4.78 & 3.35 & 3.73 & 6.96 & 5.45 & 6.17\\
+	 & 14.65 & 11.46 & 10.30 & 11.35 & 9.50 & 10.20 & 13.54 & 12.44 & 10.59\\
+		\end{tabular}
+	\end{center}
+
+	
+	\item I hope I'm not simplifying this too much, but given the above samples of $\bth$ \[
+		p(\theta_A > \theta_{\tilde{A}}) = \dfrac{\sum_{i}^n \mathrm{I} \{\theta_{i,A} > \theta_{i,\tilde{A}}\}}{n} \approx 3.1\%
+	\] 
 	
 	\vspace{.05cm} Questions 8-11 are based on the bicycle data in Table 2 below. We will focus only on the first two rows of the table (the residential streets with bike routes). We want to model the total amount of traffic $y_i$ on each street (eg. $y_1=74$) as follows:
 	
